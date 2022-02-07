@@ -235,7 +235,7 @@ current runtime."
 
 (defun lsp-fsharp--make-launch-cmd ()
   "Build the command required to launch fsautocomplete."
-  (append '("fsautocomplete" "--background-service-enabled")
+  (append '("fsautocomplete" "--background-service-enabled" "--verbose")
           lsp-fsharp-server-args))
 
 (defun lsp-fsharp--project-list ()
@@ -302,23 +302,7 @@ current runtime."
                                         (lsp--set-configuration
                                          (lsp-configuration-section "fsharp"))
                                         (lsp-fsharp--workspace-load
-                                         (lsp-fsharp--project-list)))))
-                  :after-open-fn ;; workaround https://github.com/fsharp/FsAutoComplete/issues/833
-                  (lambda ()
-                    (setq-local lsp-default-create-error-handler-fn
-                                (lambda (method)
-                                  (lambda (error)
-                                    (when
-                                        (not
-                                         (seq-find (lambda (s)
-                                                     (string= s (lsp-get error :message)))
-                                                   '("Index was outside the bounds of the array."
-                                                     "No symbol information found"
-                                                     "No ident at this location")))
-                                      (lsp--warn
-                                       "%s"
-                                       (or (lsp--error-string error)
-                                           (format "%s Request has failed" method))))))))
+                                         (lsp-fsharp--project-list))))) 
                   :server-id 'fsac
                   :download-server-fn #'lsp-fsharp--fsac-install))
 
