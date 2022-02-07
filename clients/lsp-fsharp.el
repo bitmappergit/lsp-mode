@@ -235,7 +235,7 @@ current runtime."
 
 (defun lsp-fsharp--make-launch-cmd ()
   "Build the command required to launch fsautocomplete."
-  (append (list (lsp-fsharp--fsac-runtime-cmd) (lsp-fsharp--fsac-cmd) "--background-service-enabled")
+  (append "fsautocomplete --background-service-enabled"
           lsp-fsharp-server-args))
 
 (defun lsp-fsharp--project-list ()
